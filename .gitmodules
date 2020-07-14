@@ -1,0 +1,3 @@
+[submodule "AUTOLNAMP"]
+	path = AUTOLNAMP
+	url = https://github.com/MaxSSol/AUTOLAMP.git
