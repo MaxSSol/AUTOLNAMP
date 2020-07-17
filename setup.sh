@@ -1,7 +1,7 @@
 #!/bin/bash
 apt-get install nginx -y
 
-cp ./conf/NGINX/nginx.conf /etc/nginx
+cp -r./conf/NGINX/nginx.conf /etc/nginx
 systemctl enable nginx
 systemctl start nginx
 
@@ -20,11 +20,11 @@ systemctl start memcached
 
 apt-get install apache2 libapache2-mod-php -y
 
-cp ./conf/apache2/ports.conf /etc/apache2/
+cp -r ./conf/apache2/ports.conf /etc/apache2/
 
-cp ./conf/apache2/dir.conf /etc/apache2/mods-available/
+cp -r ./conf/apache2/dir.conf /etc/apache2/mods-available/
 
-cp ./conf/apache2/apache2.conf /etc/apache2/
+cp -r ./conf/apache2/apache2.conf /etc/apache2/
 
 sudo a2dismod mpm_event
 
@@ -35,7 +35,9 @@ sudo a2enmod setenvif
 sudo systemctl enable apache2
 sudo systemctl start apache2
 
-cp ./conf/nginx/default /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+cp -r./conf/nginx/wordpress /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-enabled/wordpress /etc/nginx/sites-available/
 nginx -t
 systemctl restart nginx
 
@@ -49,14 +51,13 @@ read -p "Enter the name of user:" name_user
 read -sp "Enter the password:" pass
 sudo mysql -u root << EOF
 CREATE DATABASE $nameDB;
-CREATE USER $name_user@'localhost' IDENTIFIED BY '$pass';
+CREATE USER $name_user@'localhost' IDENTIFIED BY "$pass";
 GRANT ALL ON $nameDB.* TO $name_user@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
-EXIT;
 EOF
-
-sudo cp -r wordpress /var/www/html/wordpress
-sudo chown -R www-data:www-data /var/www/html/wordpress/
+rm -r /var/www/html/
+sudo cp -r wordpress /var/www/wordpress
+sudo chown -R www-data:www-data /var/www/wordpress/
 sudo chmod -R 755 /var/www/wordpress/
 
 sudo cp ./conf/apache2/000-default.conf /etc/apache2/sites-enabled/
