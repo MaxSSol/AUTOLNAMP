@@ -11,9 +11,10 @@ location ~* \.(bmp|gif|ico|jpeg|jpg|pict|png|svg|swf|tif)$ {
         try_files $uri =404;
     }
 
-    location ~* \.(class|css|csv|doc|docx|ejs|eot|eps|jar|js|mid|midi|otf|pdf|pls|pp>
+   location ~* \.(class|css|csv|doc|docx|ejs|eot|eps|jar|js|mid|midi|otf|pdf|pls|ppt|pptx|ps|svgz|tiff|ttf|txt|webp|woff|woff2|xls|xlsx)$  {
         try_files $uri =404;
   }
+
 location / {
         proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr;
